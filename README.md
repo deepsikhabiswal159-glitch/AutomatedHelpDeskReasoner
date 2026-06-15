@@ -1,16 +1,49 @@
-# React + Vite
+# CFAI Helpdesk Portal
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Overview
 
-Currently, two official plugins are available:
+The CFAI Helpdesk Portal is a Python-based application developed using Tkinter. It provides a simple interface for users to manage support-related activities such as account access, ticket creation, and issue resolution.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Features
 
-## React Compiler
+* User Login
+* User Registration (Signup)
+* Helpdesk Dashboard
+* Support Ticket Creation
+* Basic AI Helpdesk Chatbot
+* Ticket Status Monitoring
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Technologies Used
 
-## Expanding the ESLint configuration
+* Python
+* Tkinter
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Project Structure
+
+* `helpdesk.py` – Main application file
+* `README.md` – Project documentation
+* `requirements.txt` – Project dependencies
+* `.gitignore` – Git ignore configuration
+
+## How to Run
+
+1. Install Python 3.x.
+2. Download or clone the repository.
+3. Open the project folder in VS Code.
+4. Run the following command:
+
+```bash
+python helpdesk.py
+```
+
+## Future Enhancements
+
+* Database integration for storing tickets
+* User authentication system
+* Advanced chatbot support
+* Email notifications
+* Ticket tracking and reporting
+
+## Author
+
+Developed as part of the CFAI Helpdesk Management System project.
