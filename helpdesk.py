@@ -33,7 +33,7 @@ def login_page():
 
     tk.Label(
         root,
-        text="Automated Helpdesk Reasoner for CFAI",
+        text="Automated Helpdesk Reasoner",
         font=("Arial", 12),
         bg=BACKGROUND,
         fg="gray"
