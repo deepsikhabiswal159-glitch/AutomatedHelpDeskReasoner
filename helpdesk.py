@@ -6,20 +6,23 @@ BACKGROUND = "#f7f1e8"
 PRIMARY = "#9a5d34"
 TEXT = "#5c3b28"
 
+# Data
+tickets = []
+open_tickets = 0
+resolved_tickets = 0
+
 # Main Window
 root = tk.Tk()
 root.title("CFAI Helpdesk Portal")
-root.geometry("900x650")
+root.geometry("900x700")
 root.configure(bg=BACKGROUND)
 
 
-# Clear Screen
 def clear():
     for widget in root.winfo_children():
         widget.destroy()
 
 
-# Login Page
 def login_page():
     clear()
 
@@ -33,22 +36,24 @@ def login_page():
 
     tk.Label(
         root,
-        text="Automated Helpdesk Reasoner",
+        text="Automated Helpdesk Reasoner for CFAI",
         font=("Arial", 12),
         bg=BACKGROUND,
         fg="gray"
-    ).pack()
+    ).pack(pady=10)
 
-    tk.Entry(root, width=35).pack(pady=10)
+    tk.Label(root, text="Email Address", bg=BACKGROUND).pack()
+    tk.Entry(root, width=40).pack(pady=5)
 
-    tk.Entry(root, width=35, show="*").pack(pady=10)
+    tk.Label(root, text="Password", bg=BACKGROUND).pack()
+    tk.Entry(root, width=40, show="*").pack(pady=5)
 
     tk.Button(
         root,
         text="Login",
+        width=20,
         bg=PRIMARY,
         fg="white",
-        width=20,
         command=dashboard_page
     ).pack(pady=15)
 
@@ -60,7 +65,6 @@ def login_page():
     ).pack()
 
 
-# Signup Page
 def signup_page():
     clear()
 
@@ -72,17 +76,24 @@ def signup_page():
         fg=TEXT
     ).pack(pady=20)
 
-    tk.Entry(root, width=40).pack(pady=8)
-    tk.Entry(root, width=40).pack(pady=8)
-    tk.Entry(root, width=40, show="*").pack(pady=8)
-    tk.Entry(root, width=40, show="*").pack(pady=8)
+    tk.Label(root, text="Full Name", bg=BACKGROUND).pack()
+    tk.Entry(root, width=40).pack(pady=5)
+
+    tk.Label(root, text="Email Address", bg=BACKGROUND).pack()
+    tk.Entry(root, width=40).pack(pady=5)
+
+    tk.Label(root, text="Password", bg=BACKGROUND).pack()
+    tk.Entry(root, width=40, show="*").pack(pady=5)
+
+    tk.Label(root, text="Confirm Password", bg=BACKGROUND).pack()
+    tk.Entry(root, width=40, show="*").pack(pady=5)
 
     tk.Button(
         root,
         text="Create Account",
+        width=20,
         bg=PRIMARY,
         fg="white",
-        width=20,
         command=dashboard_page
     ).pack(pady=15)
 
@@ -93,7 +104,6 @@ def signup_page():
     ).pack()
 
 
-# Dashboard Page
 def dashboard_page():
     clear()
 
@@ -107,21 +117,14 @@ def dashboard_page():
 
     tk.Label(
         root,
-        text="Open Tickets: 12",
+        text=f"📂 Open Tickets: {open_tickets}",
         font=("Arial", 14),
         bg=BACKGROUND
     ).pack()
 
     tk.Label(
         root,
-        text="Pending Tickets: 5",
-        font=("Arial", 14),
-        bg=BACKGROUND
-    ).pack()
-
-    tk.Label(
-        root,
-        text="Resolved Tickets: 20",
+        text=f"✅ Resolved Tickets: {resolved_tickets}",
         font=("Arial", 14),
         bg=BACKGROUND
     ).pack()
@@ -134,32 +137,28 @@ def dashboard_page():
         fg=TEXT
     ).pack(pady=20)
 
-    tk.Label(
-        root,
-        text="• Password Reset Request - Open",
-        bg=BACKGROUND
-    ).pack()
-
-    tk.Label(
-        root,
-        text="• Course Access Issue - Pending",
-        bg=BACKGROUND
-    ).pack()
-
-    tk.Label(
-        root,
-        text="• LMS Login Problem - Resolved",
-        bg=BACKGROUND
-    ).pack()
+    if len(tickets) == 0:
+        tk.Label(
+            root,
+            text="No tickets created yet",
+            bg=BACKGROUND
+        ).pack()
+    else:
+        for ticket in tickets[-5:]:
+            tk.Label(
+                root,
+                text=f"• {ticket['title']} ({ticket['priority']})",
+                bg=BACKGROUND
+            ).pack()
 
     tk.Button(
         root,
         text="Create Ticket",
+        width=20,
         bg=PRIMARY,
         fg="white",
-        width=20,
         command=create_ticket_page
-    ).pack(pady=10)
+    ).pack(pady=15)
 
     tk.Button(
         root,
@@ -176,7 +175,6 @@ def dashboard_page():
     ).pack(pady=5)
 
 
-# Create Ticket Page
 def create_ticket_page():
     clear()
 
@@ -189,25 +187,66 @@ def create_ticket_page():
     ).pack(pady=20)
 
     tk.Label(root, text="Issue Title", bg=BACKGROUND).pack()
-    tk.Entry(root, width=50).pack(pady=5)
+
+    title_entry = tk.Entry(root, width=50)
+    title_entry.pack(pady=5)
 
     tk.Label(root, text="Category", bg=BACKGROUND).pack()
-    tk.Entry(root, width=50).pack(pady=5)
+
+    category_var = tk.StringVar(value="Technical Issue")
+
+    tk.OptionMenu(
+        root,
+        category_var,
+        "Technical Issue",
+        "Course Access",
+        "Account Problem",
+        "Fee Related",
+        "Other"
+    ).pack(pady=5)
+
+    tk.Label(root, text="Priority", bg=BACKGROUND).pack()
+
+    priority_var = tk.StringVar(value="Medium")
+
+    tk.OptionMenu(
+        root,
+        priority_var,
+        "Low",
+        "Medium",
+        "High"
+    ).pack(pady=5)
 
     tk.Label(root, text="Issue Description", bg=BACKGROUND).pack()
 
-    issue_box = tk.Text(root, width=50, height=8)
-    issue_box.pack(pady=10)
+    description = tk.Text(root, width=50, height=8)
+    description.pack(pady=10)
+
+    def submit_ticket():
+        global open_tickets
+
+        ticket = {
+            "title": title_entry.get(),
+            "category": category_var.get(),
+            "priority": priority_var.get()
+        }
+
+        tickets.append(ticket)
+        open_tickets += 1
+
+        messagebox.showinfo(
+            "Success",
+            "Ticket Submitted Successfully!"
+        )
+
+        dashboard_page()
 
     tk.Button(
         root,
         text="Submit Ticket",
         bg=PRIMARY,
         fg="white",
-        command=lambda: messagebox.showinfo(
-            "Success",
-            "Ticket Submitted Successfully!"
-        )
+        command=submit_ticket
     ).pack(pady=10)
 
     tk.Button(
@@ -217,7 +256,6 @@ def create_ticket_page():
     ).pack()
 
 
-# Chatbot Page
 def chatbot_page():
     clear()
 
@@ -244,15 +282,15 @@ def chatbot_page():
         text = question.get().lower()
 
         if "password" in text:
-            msg = "Please use the password reset option."
+            msg = "🔒 Please use the password reset option."
         elif "course" in text:
-            msg = "Please contact the course coordinator."
+            msg = "📚 Please contact the course coordinator."
         elif "fee" in text:
-            msg = "Please visit the Accounts Department."
+            msg = "💳 Please visit the Accounts Department."
         elif "login" in text:
-            msg = "Try resetting your credentials."
+            msg = "👤 Try resetting your credentials."
         else:
-            msg = "Please create a support ticket for assistance."
+            msg = "🤖 Please create a support ticket."
 
         response.config(text=msg)
 
@@ -271,6 +309,6 @@ def chatbot_page():
     ).pack()
 
 
-# Start Application
+# Start App
 login_page()
 root.mainloop()
